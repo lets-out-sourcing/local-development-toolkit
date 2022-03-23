@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  memcached:
+    image: bitnami/memcached:latest
+    ports:
+      - "11211:11211"
+    labels:
+      - "traefik.enable=false"
+      - "traefik.tcp.routers.memcached.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.memcached.entrypoints=memcached"
+      - "traefik.tcp.routers.memcached.service=memcached"
+      - "traefik.tcp.services.memcached.loadbalancer.server.port=11211"
+networks: 
+  default:
+    external:
+      name: traefik

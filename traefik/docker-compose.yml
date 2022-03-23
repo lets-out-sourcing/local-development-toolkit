@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  traefik:
+    restart: always
+    image: traefik
+    ports:
+      - "127.0.0.1:53:53/udp"
+      - "80:80"
+      - "443:443"
+      - "28015:28015"
+    volumes:
+      - ./:/etc/traefik/
+      - ./../certs:/etc/ssl/traefik:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    labels:
+      - "traefik.http.routers.api.entrypoints=http,https"
+      - "traefik.http.routers.api.rule=Host(`traefik.local.merik.dev`)"
+      - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.api.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=merik:$$apr1$$pB9NXimF$$QSBsgD3/8scu3Rlpz1E9c0"
+networks: 
+  default:
+    external:
+      name: traefik

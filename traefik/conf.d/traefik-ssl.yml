@@ -1,0 +1,12 @@
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/ssl/traefik/rootCA.pem
+        keyFile: /etc/ssl/traefik/rootCA-key.pem
+  certificates:
+    - certFile: /etc/ssl/traefik/rootCA.pem
+      keyFile: /etc/ssl/traefik/rootCA-key.pem
+  options:
+    default:
+      sniStrict: false

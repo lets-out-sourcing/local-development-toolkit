@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  rethinkdb:
+    image: mbagnall/rethinkdb:latest
+    volumes:
+      - ./data:/data
+    labels:
+      - "traefik.http.routers.rethink.service=rethink"
+      - "traefik.http.routers.rethink.entrypoints=http,https"
+      - "traefik.http.routers.rethink.rule=Host(`rethink.local.merik.dev`)"
+      - "traefik.http.services.rethink.loadbalancer.server.port=8080"
+      - "traefik.tcp.routers.rethinkdb.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.rethinkdb.entrypoints=rethink-db"
+      - "traefik.tcp.routers.rethinkdb.service=rethinkdb"
+      - "traefik.tcp.services.rethinkdb.loadbalancer.server.port=28015"
+networks: 
+  default:
+    external:
+      name: traefik

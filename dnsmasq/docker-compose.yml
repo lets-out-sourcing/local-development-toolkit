@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  dnsmasq:
+    restart: always
+    image: jpillora/dnsmasq
+    volumes:
+      - ./dnsmasq.conf:/etc/dnsmasq.conf
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    environment: 
+      - HTTP_USER=root
+      - HTTP_PASS=passwd
+    labels:
+      - "traefik.http.routers.dnsmasqUI.service=dnsmasqUI"
+      - "traefik.http.routers.dnsmasqUI.entrypoints=http,https"
+      - "traefik.http.routers.dnsmasqUI.rule=Host(`dns.local.merik.dev`)"
+      - "traefik.http.services.dnsmasqUI.loadbalancer.server.port=8080"
+      - "traefik.udp.routers.dnsmasq.entrypoints=dns"
+      - "traefik.udp.routers.dnsmasq.service=dnsmasq"
+      - "traefik.udp.services.dnsmasq.loadbalancer.server.port=53"
+networks: 
+  default:
+    external:
+      name: traefik

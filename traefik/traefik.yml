@@ -1,0 +1,39 @@
+## traefik.yml
+
+serversTransport:
+  insecureSkipVerify: true
+
+entryPoints:
+  dns:
+    address: ":53/udp"
+  http:
+    address: ":80"
+    forwardedHeaders:
+      insecure: true
+  https:
+    address: ":443"
+    forwardedHeaders:
+      insecure: true
+    http:
+      tls: {}
+  rethink-db:
+    address: ":28015"
+
+# Docker configuration backend
+providers:
+  file:
+    watch: true
+    directory: "/etc/traefik/conf.d"
+  docker:
+    defaultRule: "Host(`{{ trimPrefix `/` .Name }}.local.merik.dev`)"
+
+# API and dashboard configuration
+api:
+  dashboard: true
+  insecure: false
+
+accessLog: {}
+
+# experimental:
+#   pilot:
+#     token: "ae7ca69a-7019-4b90-9acd-d1c65031780c"
