@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  minio:
+    image: quay.io/minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./data:/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    environment: 
+      - MINIO_BROWSER_REDIRECT_URL=https://console-minio.local.merik.dev
+    command: [ "server", "/data", "--console-address", ":9001" ]
+    labels:
+      - "traefik.http.routers.console-minio.service=console-minio"
+      - "traefik.http.routers.console-minio.entrypoints=http,https"
+      - "traefik.http.routers.console-minio.rule=Host(`console-minio.local.merik.dev`)"
+      - "traefik.http.services.console-minio.loadbalancer.server.port=9001"
+      - "traefik.http.routers.minio.service=minio"
+      - "traefik.http.routers.minio.entrypoints=http,https"
+      - "traefik.http.routers.minio.rule=Host(`minio.local.merik.dev`)"
+      - "traefik.http.services.minio.loadbalancer.server.port=9000"
+networks: 
+  default:
+    external:
+      name: traefik

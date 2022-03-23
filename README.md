@@ -8,6 +8,7 @@
 - mysql
 - redis
 - memcached
+- minio ( as AWS S3 service
 - rethinkdb (optional
 
 ## Quick start
@@ -46,12 +47,11 @@ docker compose up -d
 ### LoadBalancer
 
 It will occupy the 53, 80, 443, 28015 ports locally.
+Visiting https://traefik.local.merik.dev with user `merik` and `Merik@2020!` for password 
 
 ```bash
 cd traefik
 docker compose up -d
-
-# visiting https://traefik.local.merik.dev with user `merik` and `Merik@2020!` for password 
 ```
 
 ### MySQL
@@ -93,6 +93,18 @@ cd memcached
 
 docker compose up -d
 ```
+
+### MINIO
+
+In docker, you can simply use hostname `minio` to connect to Memcached server.
+You can access the console by https://console-minio.local.merik.dev/ with user `minioadmin` same as password.
+
+```bash
+cd minio
+
+docker compose up -d
+```
+
 
 ## Configure your DNS resolver setting
 
